@@ -7,7 +7,7 @@ class vidpage extends Component{
             <div >
                 <div class='col-12 m-auto'>
                     <center>
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?start=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen width='100%' height='700px'></iframe>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen width='100%' height='700px'></iframe>
                     </center>
                 </div>
                 <Link to='/'>
