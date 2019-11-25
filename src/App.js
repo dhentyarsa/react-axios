@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom'
 import Homepage from './Pages/Homepage'
 import notHome from './Pages/notHome'
 import Navbar from './components/navbar'
+import VideoEmbed from './Pages/VideoEmbed'
 // import { thisExpression } from '@babel/types'
 // import { directive } from '@babel/types'
 // import logo from './logo.svg';
@@ -15,6 +16,7 @@ class App extends Component{
         <Navbar />
         <Route path='/' component={Homepage} exact />
         <Route path='/not-home' component={notHome} />
+        <Route path='/vid-embed' component={VideoEmbed} />
       </div>
     )
   }
