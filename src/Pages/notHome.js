@@ -8,7 +8,7 @@ class notHome extends Component{
                 <div class='col-12 m-auto'>
                     <center>
                         <h1>
-                            Wiggle-wiggle.
+                            Wiggle-wiggle.a
                             
                         </h1>
                         <img src='https://31.media.tumblr.com/a9d6b265d1f45ce6308ee680cfd2049f/tumblr_ne9n48NBbg1tzms7wo1_400.gif' alt='cat-gif' width='50%' height='50%'></img>
