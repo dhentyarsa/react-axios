@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Axios from 'axios'
-import { Card, Button, CardTitle, CardText, Row, Col, Table, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Card, Button, CardTitle, CardText, Row, Col, Table, Form, FormGroup, Label, Input, FormText, DropdownItem } from 'reactstrap';
+import DataCard from '../components/card'
+import DataDropdown from '../components/datadropdown'
+import DropdownMain from '../components/dropdown'
 
 class Homepage extends Component{
     
     state = {
-        data : []
+        data : [],
+        selectedId : null
     }
 
     componentDidMount(){
@@ -50,20 +54,65 @@ class Homepage extends Component{
 
     renderUserData = () => {
         return this.state.data.map((val,index) => {
-            return(
-                
-                <tbody>
-                  <tr>
-                    <th scope="row">{index+1}</th>
-                    <td>{val.first_name}</td>
-                    <td>{val.last_name}</td>
-                    <td>{val.email}</td>
-                  </tr>
-                </tbody>
-            );
-          }
-          
-            )
+            if(this.state.selectedId === val.id){
+                return(
+                    <tbody>
+                    <tr>
+                        <th scope="row">{index+1}</th>
+                        <td>
+                            <Input type='text' innerRef={(newfirstnameEdit) => this.newfirstnameEdit = newfirstnameEdit} placeholder='First Name'></Input>
+                        </td>
+                        <td>
+                            <Input type='text' innerRef={(newlastnameEdit) => this.newlastnameEdit = newlastnameEdit} placeholder='Last Name'></Input>
+                        </td>
+                        <td>
+                            <Input type='text' innerRef={(newemailEdit) => this.newemailEdit = newemailEdit} placeholder='E-mail'></Input>
+                        </td>
+                        <td>
+                            <center>
+                                <td>
+                                    <Button color='success' onClick = {() => {this.confirmEdit(val.id)}}>
+                                        Confirm
+                                    </Button>
+                                </td>
+                                <td>
+                                    <Button color='secondary' onClick = {() => {this.cancelEdit(val.id)}}>
+                                        Cancel
+                                    </Button>
+                                </td>
+                            </center>
+                        </td>
+                    </tr>
+                    </tbody>
+                )
+                }else{
+                    return(
+                        
+                        <tbody>
+                        <tr>
+                            <th scope="row">{index+1}</th>
+                            <td>{val.first_name}</td>
+                            <td>{val.last_name}</td>
+                            <td>{val.email}</td>
+                            <td>
+                                <center>
+                                    <td>
+                                        <Button color='primary' onClick = {() => {this.editData(val.id)}}>
+                                            Edit
+                                        </Button>
+                                    </td>
+                                    <td>
+                                        <Button color='danger' onClick = {() => {this.removeData(val.id)}}>
+                                            Delete
+                                        </Button>
+                                    </td>
+                                </center>
+                            </td>
+                        </tr>
+                        </tbody>
+                    )
+            }
+        })
     }
 
     submitData = () => {
@@ -77,15 +126,97 @@ class Homepage extends Component{
         })
         .then((res) => {
             console.log(res.data)
-            this.componentDidMount()
-            this.refs.firstname.value = ''
-            this.refs.lastname.value = ''
-            this.refs.email.value = ''
+            // this.componentDidMount()
+            Axios.get('http://localhost:2000/users')
+            .then((res) =>{
+                this.setState({data: res.data})
+                this.refs.firstname.value = ''
+                this.refs.lastname.value = ''
+                this.refs.email.value = ''
+            })
         })
         .catch((err) => {
             console.log(err)
         })
 
+    }
+
+    removeData = (a) => {
+        var url = `http://localhost:2000/users/${a}`
+        Axios.delete(url)
+        .then((res) => {
+            console.log(res.data)
+            // this.componentDidMount()
+            Axios.get('http://localhost:2000/users')
+            .then((res) =>{
+                this.setState({data: res.data})
+            })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
+    editData = (id) => {
+        this.setState({selectedId: id})
+        console.log(this.state.selectedId)
+           
+        }
+
+    confirmEdit = (id) => {
+        var inputfirstname = this.newfirstnameEdit.value
+        var inputlastname = this.newlastnameEdit.value
+        var email = this.newemailEdit.value
+        Axios.put(`http://localhost:2000/users/${id}` , {
+            first_name: inputfirstname,
+            last_name: inputlastname,
+            email: email
+        })
+        .then((res) => {
+            // this.componentDidMount()
+            Axios.get('http://localhost:2000/users')
+            .then((res) =>{
+                this.setState({data: res.data})
+                this.setState({selectedId: null})
+            })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
+    cancelEdit = () => {
+        Axios.get('http://localhost:2000/users')
+        .then((res) => {
+            this.setState({data:res.data})
+            this.setState({selectedId: null})
+
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
+    renderCard = () => {
+        return this.state.data.map((val) => {
+            return(
+                    <DataCard firstname={val.first_name} lastname={val.last_name} email={val.email}></DataCard>
+            )
+        })
+    }
+
+    renderDropdown = () => {
+        return this.state.data.map((val) => {
+            return(
+                    <DataDropdown firstname={val.first_name} lastname={val.last_name} email={val.email}></DataDropdown>
+            )
+        })
+    }
+
+    renderDropdownMain = () => {
+            return(
+                    <DropdownMain renderddown={this.renderDropdown()}></DropdownMain>
+            )
     }
 
     render(){
@@ -110,20 +241,35 @@ class Homepage extends Component{
                     <br></br>
                     <br></br>
                     <br></br>
-                    <Table bordered className="col-6">
+                    <Table bordered className="col-10">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
-                                <th>E-mail</th>
+                                <th >E-mail</th>
+                                <th>
+                                    <center>
+                                    Action
+                                    </center>
+                                </th>
                             </tr>
                         </thead>
                     {this.renderUserData()}
                     </Table>
                 </center>
-                
+                <center>
+                        {this.renderCard()}
+                        <br></br>
+                        <center>
+                            {this.renderDropdownMain()}
+                        </center>
+                </center>
+                <br></br>
+                <br></br>
                 <Form className='text-center'>
+                    <h3>Submit your Data below!</h3>
+                    <br></br>
                     First Name
                     <br></br>
                     <input className='col-8 container-fluid' type="text" name="first-name" ref="firstname" placeholder="your first name here" />
@@ -136,9 +282,10 @@ class Homepage extends Component{
                     <br></br>
                     <input className='col-8 container-fluid m-auto' type="text" name="email" ref="email" placeholder="your e-mail here" />
                     <br></br>                  
+                    <br></br>                  
                     <Button onClick={this.submitData}>Submit</Button>
                 </Form>
-
+                <br></br>
             </div>
         )
     }
