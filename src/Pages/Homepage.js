@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Axios from 'axios'
-import { Card, Button, CardTitle, CardText, Row, Col, Table, Form, FormGroup, Label, Input, FormText, DropdownItem } from 'reactstrap';
+import { Button, Table, Form, Input } from 'reactstrap';
 import DataCard from '../components/card'
 import DataDropdown from '../components/datadropdown'
 import DropdownMain from '../components/dropdown'
+import { connect } from 'react-redux';
+import { add, minus} from '../redux/action/countAction';
 
 class Homepage extends Component{
     
@@ -167,6 +169,16 @@ class Homepage extends Component{
         var inputfirstname = this.newfirstnameEdit.value
         var inputlastname = this.newlastnameEdit.value
         var email = this.newemailEdit.value
+
+        if(this.newfirstnameEdit.value === ''){
+            inputfirstname = this.state.data[id-1].first_name
+        }
+        if(this.newlastnameEdit.value === ''){
+            inputlastname = this.state.data[id-1].last_name
+        }
+        if(this.newemailEdit.value === ''){
+            email = this.state.data[id-1].email
+        }
         Axios.put(`http://localhost:2000/users/${id}` , {
             first_name: inputfirstname,
             last_name: inputlastname,
@@ -220,6 +232,7 @@ class Homepage extends Component{
     }
 
     render(){
+        console.log(this.props.count)
         return(
             <div>
                 <div className='col-12 m-center'>
@@ -286,9 +299,24 @@ class Homepage extends Component{
                     <Button onClick={this.submitData}>Submit</Button>
                 </Form>
                 <br></br>
+                <center>
+                    <Button onClick = {this.props.minus}>
+                        -
+                    </Button>
+                    {this.props.count}
+                    <Button onClick = {this.props.add}>
+                        +
+                    </Button>
+                </center>
             </div>
         )
     }
 }
 
-export default Homepage
+const mapStatetoProps = (state) => {
+    return {
+        count: state.count.count
+    }
+}
+
+export default connect(mapStatetoProps, { add,minus })(Homepage)
