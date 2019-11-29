@@ -10,8 +10,11 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../redux/action'
 
 const NaviBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,30 +24,48 @@ const NaviBar = (props) => {
   return (
     <div>
       <Navbar color="warning" light expand="md">
-        <NavbarBrand href="/">Home</NavbarBrand>
+        <NavbarBrand>
+            <NavLink>
+          <Link to="/">
+              Home
+          </Link>
+            </NavLink>
+        </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             <NavItem>
+              <Link>
+              </Link>
               <NavLink href="/vid-embed">Video</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/not-home">Cat</NavLink>
+                <Link to="/not-home">
+                  <NavLink>
+                    Cat
+                  </NavLink>  
+                </Link>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
-                Options
+                {
+                  props.username
+                  ?
+                  'Welcome!'
+                  :
+                  'Log-in'
+                }
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem>
-                  Option 1
+                  Profile
                 </DropdownItem>
                 <DropdownItem>
-                  Option 2
+                  Settings
                 </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem href='https://google.com'>
-                  Reset
+                <DropdownItem onClick={props.logout}>
+                  Log-out
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -55,4 +76,10 @@ const NaviBar = (props) => {
   );
 }
 
-export default NaviBar;
+const mapStatetoProps = (state) => {
+  return {
+      username: state.user.username
+  }
+}
+
+export default connect(mapStatetoProps, { logout })(NaviBar);
