@@ -25,11 +25,11 @@ const NaviBar = (props) => {
     <div>
       <Navbar color="warning" light expand="md">
         <NavbarBrand>
-            <NavLink>
           <Link to="/">
+            <NavLink>
               Home
-          </Link>
             </NavLink>
+          </Link>
         </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>

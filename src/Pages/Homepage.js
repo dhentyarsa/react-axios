@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import Axios from 'axios'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import Axios from 'axios';
 import { Button, Table, Form, Input } from 'reactstrap';
-import DataCard from '../components/card'
-import DataDropdown from '../components/datadropdown'
-import DropdownMain from '../components/dropdown'
+import DataCard from '../components/card';
+import DataDropdown from '../components/datadropdown';
+import DropdownMain from '../components/dropdown';
 import { connect } from 'react-redux';
 import { add, minus} from '../redux/action/countAction';
 
@@ -20,7 +20,6 @@ class Homepage extends Component{
         .then((res) => {
             this.setState({data:res.data})
             console.log(res.data)
-
         })
         .catch((err) => {
             console.log(err)
